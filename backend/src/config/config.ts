@@ -4,6 +4,8 @@ config();
 const envConfig = {
     port: process.env.PORT,
     mongodbString: process.env.MONGODB_URI,
+    BACKEND_URL: process.env.BACKEND_URL,
+    environment: process.env.NODE_ENV,
 };
 
 export default envConfig;
