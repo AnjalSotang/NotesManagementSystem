@@ -7,7 +7,7 @@ const globalErrorHandler = (err: HttpError, req: Request, res: Response, next: N
     const statusCode = err.status || 500;
     res.status(statusCode).json({
         message: err.message || "Internal Server Error",
-        stack: envConfig.environment === 'development' ? err.stack : "Something went wrong ",
+        errorStack: envConfig.environment === 'development' ? err.stack : "Something went wrong ",
     });
 }
 

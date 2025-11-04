@@ -1,8 +1,9 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import noteModel from "./noteModel";
 import envConfig from "../config/config";
+import createHttpError from "http-errors";
 
-const createNote = async (req: Request, res: Response) => {
+const createNote = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const file = req.file
       ? `${envConfig.BACKEND_URL}/{req.file.filename}`
@@ -23,6 +24,9 @@ const createNote = async (req: Request, res: Response) => {
     });
     res.status(201).json({ message: "Note created successfully" });
   } catch (err) {
-    res.status(500).json({ message: "Internal Server Error" });
-  }
+    console.log(err);
+    return next(createHttpError(500, 'Internal Server Error'));
+}
 };
+
+export { createNote };
