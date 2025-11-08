@@ -73,6 +73,20 @@ const deleteNote = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const updateNote = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {id} = req.params;
+  await noteModel.findByIdAndUpdate(id);
+    res.status(200).json({
+      messages: "Note Updated"
+    });
+  } catch (err) {
+    console.log(err);
+    return next(createHttpError(500, "Internal Server Error"));
+  }
+};
 
 
-export { createNote, listNotes, listNote, deleteNote };
+
+
+export { createNote, listNotes, listNote, deleteNote, updateNote };
