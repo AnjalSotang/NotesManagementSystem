@@ -1,6 +1,6 @@
 import React from 'react'
 
-const NoteCard = () => {
+const NoteCard = ({notes}) => {
   return (
     <div className="bg-gray-100 py-12 px-8 mt-10">
 
