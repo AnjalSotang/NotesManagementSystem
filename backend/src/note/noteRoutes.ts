@@ -1,8 +1,13 @@
 import express from 'express';
-import { createNote } from './noteController';
-
+import { createNote, listNotes, listNote, deleteNote } from './noteController';
 const noteRoutes = express.Router();
 
-noteRoutes.route('/').post(createNote);
+import {multer, storage} from '../middlewares/multerMiddleware'
+const upload = multer({storage:storage})
+
+noteRoutes.route('/').post(upload.single('file'),createNote);
+noteRoutes.route('/').get(listNotes);
+noteRoutes.route('/:id').get(listNote);
+noteRoutes.route('/:id').delete(deleteNote);
 
 export default noteRoutes;

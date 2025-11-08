@@ -6,7 +6,7 @@ import createHttpError from "http-errors";
 const createNote = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const file = req.file
-      ? `${envConfig.BACKEND_URL}/{req.file.filename}`
+      ? `${envConfig.BACKEND_URL}/${req.file.filename}`
       : "https://i.pinimg.com/736x/a5/53/17/a55317f4dd2f74d099d48e3ac4a3bbc8.jpg";
     const { title, subtitle, description } = req.body;
 
@@ -16,7 +16,8 @@ const createNote = async (req: Request, res: Response, next: NextFunction) => {
       });
       return;
     }
-    noteModel.create({
+
+    await noteModel.create({
       title,
       subtitle,
       description,
@@ -25,8 +26,50 @@ const createNote = async (req: Request, res: Response, next: NextFunction) => {
     res.status(201).json({ message: "Note created successfully" });
   } catch (err) {
     console.log(err);
-    return next(createHttpError(500, 'Internal Server Error'));
-}
+    return next(createHttpError(500, "Internal Server Error"));
+  }
 };
 
-export { createNote };
+const listNotes = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const notes = await noteModel.find().sort({ createdAt: -1 });
+    res.status(200).json({
+      messages: "Notes Fetched",
+      note: notes,
+    });
+  } catch (err) {
+    console.log(err);
+    return next(createHttpError(500, "Internal Server Error"));
+  }
+};
+
+const listNote = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {id} = req.params;
+    const note = await noteModel.findById(id);
+    res.status(200).json({
+      messages: "Note Fetched",
+      note: note,
+    });
+  } catch (err) {
+    console.log(err);
+    return next(createHttpError(500, "Internal Server Error"));
+  }
+};
+
+const deleteNote = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {id} = req.params;
+  await noteModel.findByIdAndDelete(id);
+    res.status(200).json({
+      messages: "Note Deleted"
+    });
+  } catch (err) {
+    console.log(err);
+    return next(createHttpError(500, "Internal Server Error"));
+  }
+};
+
+
+
+export { createNote, listNotes, listNote, deleteNote };

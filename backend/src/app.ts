@@ -4,6 +4,10 @@ import noteRoutes from './note/noteRoutes';
 
 const app = express();
 
+app.use(express.json());
+app.use(express.static('./src/uploads/'))
+
+
 app.use("/api/notes", noteRoutes);
 app.use(globalErrorHandler)
 export default app;
